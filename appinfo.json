@@ -1,0 +1,22 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Necat Dev",
+    "longName": "Post It",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "Post It",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "3af31553-8f80-43a0-82f3-673677d3dfcb",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
