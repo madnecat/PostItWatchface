@@ -1,6 +1,6 @@
 #include "minUnitManag.h"
 
-static int s_index = 0;
+int mu_index = 0;
   
 //boucle de lancement de l'animation pour les unités des minutes
 void min_unit_next_frame_handler(void *context) {
@@ -9,7 +9,7 @@ void min_unit_next_frame_handler(void *context) {
   layer_mark_dirty(min_unit_layer);
   
   //si animation pas finie
-  if(s_index != -1)
+  if(mu_index != -1)
     
     // Continue the sequence
     app_timer_register(DELTA, min_unit_next_frame_handler, NULL);
@@ -17,7 +17,7 @@ void min_unit_next_frame_handler(void *context) {
   else
     
     //raz index
-    s_index = 0;
+    mu_index = 0;
     
 }
 
@@ -25,7 +25,7 @@ void min_unit_next_frame_handler(void *context) {
 void min_unit_update_proc(Layer *layer, GContext *ctx) {
   
   // Get the next frame
-  GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(min_unit_sequence, s_index);
+  GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(min_unit_sequence, mu_index);
   
   // If another frame was found, draw it    
   if (frame) {
@@ -34,10 +34,10 @@ void min_unit_update_proc(Layer *layer, GContext *ctx) {
   
   // Advance to the next frame, wrapping if neccessary
   int num_frames = gdraw_command_sequence_get_num_frames(min_unit_sequence);
-  s_index++;
+  mu_index++;
   
-  if (s_index >= num_frames) {
-    s_index = -1;
+  if (mu_index >= num_frames) {
+    mu_index = -1;
   }
   
 }
