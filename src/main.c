@@ -1,32 +1,16 @@
 #include <pebble.h>
-
-//nombre d'images dans une animation (ex : 1 -> 2)
-#define CYCLE 25
-
-//nombre de millisecondes entre 2 images de l'animation
-#define DELTA 50
+#include "minUnitManag.h"
+#include "minDozManag.h"
+#include "hourUnitManag.h"
+#include "hourDozManag.h"
+  
 // -------------------------------------------
 // --------- Déclarations --------------------
 // -------------------------------------------
-
-//type structure composite
-struct liste_sequence_layer {
-  //layer de dessin
-  Layer *active_layer;
-  //séquence d'animation
-  GDrawCommandSequence *active_sequence;
-  //point d'origine
-  GPoint *origine;
-  //élément suivant
-  struct liste_sequence_layer *suivant;
-} liste_sequence_layer;
-
-static struct liste_sequence_layer *s_maillon_actuel, 
-  *s_maillon_origine;
-
+  
+  
 //fenêtre principale
 static Window *s_main_window;
-
 
 //mémoires de minutes, heures
 static int cur_min_unit = 0,
@@ -34,73 +18,19 @@ static int cur_min_unit = 0,
   cur_hour_unit = 0, 
   cur_hour_doz = 0;
 
-//index actuel dans l'animation
-static int s_index = 0;
+
 
 // -------------------------------------------
 // ----------- Procédures --------------------
 // -------------------------------------------
 
-//boucle de lancement de l'animation
-static void next_frame_handler(void *context) {
-  
-  // Draw the next frame
-  layer_mark_dirty(s_maillon_actuel->active_layer);
 
-  //si animation pas finie
-  if(s_index != -1)
-  
-    // Continue the sequence
-    app_timer_register(DELTA, next_frame_handler, NULL);
-  
-  //sinon si liste pas totalement déroulée
-  else if (s_maillon_actuel != NULL) {
-    
-    //maillon suivant
-    s_maillon_actuel = s_maillon_actuel->suivant;
-    
-    //raz index
-    s_index = 0;    
-    
-    // Continue the sequence
-    app_timer_register(DELTA, next_frame_handler, NULL);
-  
-  } else {
-    
-    //remise à l'origine du maillon
-    s_maillon_actuel = s_maillon_origine;
-    
-    //raz index
-    s_index = 0;
-    
-  }
-}
-
-//fonction de dessin de l'image actuelle au sein de l'animation
-static void update_proc(Layer *layer, GContext *ctx) {
-  
-  // Get the next frame
-  GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_maillon_actuel->active_sequence, s_index);
-  
-  // If another frame was found, draw it    
-  if (frame) {
-    gdraw_command_frame_draw(ctx, s_maillon_actuel->active_sequence, frame, *(s_maillon_actuel->origine));
-  }
-
-  // Advance to the next frame, wrapping if neccessary
-  int num_frames = gdraw_command_sequence_get_num_frames(s_maillon_actuel->active_sequence);
-  s_index++;
-  if (s_index == num_frames) {
-    s_index = -1;
-  }
-  
-}
 
 //hook appelé lors du changement de temps
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
   // Start the animation
-  app_timer_register(DELTA, next_frame_handler, NULL);
+//  app_timer_register(DELTA, next_frame_handler, NULL);
   
 }
 
@@ -113,68 +43,54 @@ static void main_window_load(Window *window) {
   //coordonnées de la fenêtre principale
   GRect bounds = layer_get_bounds(window_layer);
   
-  //allocation premier maillon
-  s_maillon_actuel = malloc(sizeof *s_maillon_actuel);
+  //initialisation des variables graphiques
   
-  //sauvegarde adresse premier maillon
-  s_maillon_origine = s_maillon_actuel;
+  //partie dizaine d'heures
+  hour_doz_layer = layer_create(GRect(0, 0, bounds.size.w / 2, bounds.size.h / 2));
+  hour_doz_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_2);
+  layer_set_update_proc(hour_doz_layer, hour_doz_update_proc);
+  layer_add_child(window_layer, hour_doz_layer);
   
-  //instanciation premier maillon -> hour doz
-  s_maillon_actuel->active_layer = layer_create(GRect(0, 0, bounds.size.w, bounds.size.h));
-  s_maillon_actuel->active_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_2);
-  s_maillon_actuel->origine = &(GPoint(0,2));
-  s_maillon_actuel->suivant = malloc(sizeof *s_maillon_actuel);
-  layer_set_update_proc(s_maillon_actuel->active_layer, update_proc);
+  //partie unité d'heures
+  hour_unit_layer = layer_create(GRect(0, 0, bounds.size.w / 2, bounds.size.h / 2));
+  hour_unit_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_9);
+  layer_set_update_proc(hour_unit_layer, hour_unit_update_proc);
+  layer_add_child(window_layer, hour_unit_layer);
   
-  //maillon suivant
-  s_maillon_actuel = s_maillon_actuel->suivant;
+  //partie dizaine de minutes
+  min_doz_layer = layer_create(GRect(0, 0, bounds.size.w / 2, bounds.size.h / 2));
+  min_doz_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_6);
+  layer_set_update_proc(min_doz_layer, min_doz_update_proc);
+  layer_add_child(window_layer, min_doz_layer);
   
-  //instanciation second maillon -> hour unit
-  s_maillon_actuel->active_layer = layer_create(GRect(0, 0, bounds.size.w, bounds.size.h));
-  s_maillon_actuel->active_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_9);
-  s_maillon_actuel->origine = &(GPoint(72,2));
-  s_maillon_actuel->suivant = malloc(sizeof *s_maillon_actuel);
-  layer_set_update_proc(s_maillon_actuel->active_layer, update_proc);
+  //partie unité de minutes
+  min_unit_layer = layer_create(GRect(0, 0, bounds.size.w / 2, bounds.size.h / 2));
+  min_unit_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_9);
+  layer_set_update_proc(min_unit_layer, min_unit_update_proc);
+  layer_add_child(window_layer, min_unit_layer);
   
-    //maillon suivant
-  s_maillon_actuel = s_maillon_actuel->suivant;
-  
-  //instanciation troisième maillon -> min doz
-  s_maillon_actuel->active_layer = layer_create(GRect(0, 0, bounds.size.w, bounds.size.h));
-  s_maillon_actuel->active_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_6);
-  s_maillon_actuel->origine = &(GPoint(0,86));
-  s_maillon_actuel->suivant = malloc(sizeof *s_maillon_actuel);
-  layer_set_update_proc(s_maillon_actuel->active_layer, update_proc);
-  
-    //maillon suivant
-  s_maillon_actuel = s_maillon_actuel->suivant;
-  
-  //instanciation quatrième maillon -> min unit
-  s_maillon_actuel->active_layer = layer_create(GRect(0, 0, bounds.size.w, bounds.size.h));
-  s_maillon_actuel->active_sequence = gdraw_command_sequence_create_with_resource(RESOURCE_ID_FRAMES_0_9);
-  s_maillon_actuel->origine = &(GPoint(72,86));
-  s_maillon_actuel->suivant = NULL;
-  layer_set_update_proc(s_maillon_actuel->active_layer, update_proc);
-  
-  //initialisation du maillon du parcours
-  s_maillon_actuel = s_maillon_origine;
-  
+  // Start the animation
+  app_timer_register(DELTA, min_unit_next_frame_handler, NULL);
+  app_timer_register(DELTA, min_doz_next_frame_handler, NULL);
+  app_timer_register(DELTA, hour_unit_next_frame_handler, NULL);
+  app_timer_register(DELTA, hour_doz_next_frame_handler, NULL);
 }
 
 //destruction des objets dynamiques
 static void main_window_unload(Window *window) {
   
-  //variable temporaire
-  struct liste_sequence_layer *tmp = s_maillon_origine;
+  //désallocation des layers
+  layer_destroy(min_unit_layer);
+  layer_destroy(min_doz_layer);
+  layer_destroy(hour_unit_layer);
+  layer_destroy(hour_doz_layer);
   
-  //parcours des maillons
-  while(s_maillon_origine != NULL) {
-    
-    tmp = s_maillon_origine->suivant;
-    free(s_maillon_origine);
-    s_maillon_origine = tmp;
-    
-  } //fin désallocation liste
+  //désallocation des séquences
+  gdraw_command_sequence_destroy(min_unit_sequence);
+  gdraw_command_sequence_destroy(min_doz_sequence);
+  gdraw_command_sequence_destroy(hour_unit_sequence);
+  gdraw_command_sequence_destroy(hour_doz_sequence);
+  
   
 }
 
@@ -195,9 +111,6 @@ static void init() {
   
   //construction de la fenêtre sur la pile
   window_stack_push(s_main_window, true);
-  
-  // Start the animation
-  app_timer_register(DELTA, next_frame_handler, NULL);
   
 }
 
