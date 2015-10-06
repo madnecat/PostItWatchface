@@ -7,7 +7,23 @@
     "longName": "Post It",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "data/frames_0_2.pdc",
+                "name": "FRAMES_0_2",
+                "type": "raw"
+            },
+            {
+                "file": "data/frames_0_6.pdc",
+                "name": "FRAMES_0_6",
+                "type": "raw"
+            },
+            {
+                "file": "data/frames_0_9.pdc",
+                "name": "FRAMES_0_9",
+                "type": "raw"
+            }
+        ]
     },
     "sdkVersion": "3",
     "shortName": "Post It",

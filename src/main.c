@@ -1,7 +1,5 @@
 #include <pebble.h>
 
-//j'ai écrit mon premier commentaire
-  
 //fenêtre principale
 static Window *s_main_window;
 
