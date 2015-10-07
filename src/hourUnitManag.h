@@ -9,20 +9,30 @@
 #define DELTA 50
   
 //position du point d'origine du dessin dans le layer
-#define _X 2
-#define _Y 2
+#define _XHU 72
+#define _YHU 2
   
 //Fichier de déclaration des variables, procédures liées aux unités d'heures
   
 // -------------------------------------------
 // --------- Déclarations --------------------
 // -------------------------------------------
+
+//mémoires de la valeur actuelle
+extern int cur_hour_unit; 
+  
+//booléen marquant la première exécution graphique
+extern bool hu_init;
+  
+//index de parcours de la séquence
+extern int hu_index;
+extern int hu_limit;
   
 //layer de dessin des unités des heures
-static Layer *hour_unit_layer;
+extern Layer *hour_unit_layer;
 
 //séquence d'animation des unités des heures
-static GDrawCommandSequence *hour_unit_sequence;
+extern GDrawCommandSequence *hour_unit_sequence;
 
   
 // -------------------------------------------

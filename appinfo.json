@@ -9,18 +9,18 @@
     "resources": {
         "media": [
             {
-                "file": "data/frames_0_6.pdc",
-                "name": "FRAMES_0_6",
+                "file": "data/frames_min_doz.pdc",
+                "name": "FRAMES_MIN_DOZ",
                 "type": "raw"
             },
             {
-                "file": "data/frames_0_2.pdc",
-                "name": "FRAMES_0_2",
+                "file": "data/frames_hour_doz.pdc",
+                "name": "FRAMES_HOUR_DOZ",
                 "type": "raw"
             },
             {
-                "file": "data/frames_0_9.pdc",
-                "name": "FRAMES_0_9",
+                "file": "data/frames_min_unit.pdc",
+                "name": "FRAMES_MIN_UNIT",
                 "type": "raw"
             }
         ]

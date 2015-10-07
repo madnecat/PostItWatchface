@@ -9,24 +9,27 @@
 #define DELTA 50
   
 //position du point d'origine du dessin dans le layer
-#define _X 2
-#define _Y 2
+#define _XMU 72
+#define _YMU 86
   
 
 //Fichier de déclaration des variables, procédures liées aux unités de minutes
 
+//mémoires de la valeur actuelle
+extern int cur_min_unit;
   
-// -------------------------------------------
-// --------- Déclarations --------------------
-// -------------------------------------------
+//booléen marquant la première exécution graphique
+extern bool mu_init;
   
+//index de parcours de la séquence
+extern int mu_index;
+extern int mu_limit;
   
 //layer de dessin des unités des minutes
-static Layer *min_unit_layer;
+extern Layer *min_unit_layer;
 
 //séquence d'animation des unités des minutes
-static GDrawCommandSequence *min_unit_sequence;
-
+extern GDrawCommandSequence *min_unit_sequence; 
 
 // -------------------------------------------
 // ----------- Procédures --------------------

@@ -9,8 +9,8 @@
 #define DELTA 50
   
 //position du point d'origine du dessin dans le layer
-#define _X 2
-#define _Y 2
+#define _XHD 2
+#define _YHD 2
   
 //Fichier de déclaration des variables, procédures liées aux dizaines d'heures
   
@@ -18,11 +18,21 @@
 // --------- Déclarations --------------------
 // -------------------------------------------
   
+//mémoires de la valeur actuelle
+extern int cur_hour_doz;
+  
+//booléen marquant la première exécution graphique
+extern bool hd_init;
+  
+//index de parcours de la séquence
+extern int hd_index; 
+extern int hd_limit;
+  
 //layer de dessin des dizaines d'heures
-static Layer *hour_doz_layer;
+extern Layer *hour_doz_layer;
 
 //séquence d'animation des dizaines d'heures
-static GDrawCommandSequence *hour_doz_sequence;
+extern GDrawCommandSequence *hour_doz_sequence;
   
 // -------------------------------------------
 // ----------- Procédures --------------------

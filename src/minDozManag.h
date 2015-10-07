@@ -9,20 +9,30 @@
 #define DELTA 50
 
 //position du point d'origine du dessin dans le layer
-#define _X 2
-#define _Y 2
+#define _XMD 2
+#define _YMD 86
   
 //Fichier de déclaration des variables, procédures liées aux dizaines de minutes
   
 // -------------------------------------------
 // --------- Déclarations --------------------
 // -------------------------------------------
+
+//mémoires de la valeur actuelle
+extern int cur_min_doz; 
+
+//booléen marquant la première exécution graphique
+extern bool md_init;
   
+//index de parcours de la séquence
+extern int md_index;  
+extern int md_limit;
+
 //layer de dessin des dizaines des minutes
-static Layer *min_doz_layer;
+Layer *min_doz_layer;
 
 //séquence d'animation des dizaines des minutes
-static GDrawCommandSequence *min_doz_sequence;
+GDrawCommandSequence *min_doz_sequence;
 
   
 // -------------------------------------------
