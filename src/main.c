@@ -73,7 +73,6 @@ static void main_window_unload(Window *window) {
   //désallocation des séquences
   gdraw_command_sequence_destroy(min_unit_sequence);
   gdraw_command_sequence_destroy(min_doz_sequence);
-  gdraw_command_sequence_destroy(hour_unit_sequence);
   gdraw_command_sequence_destroy(hour_doz_sequence);
   
   
@@ -117,7 +116,7 @@ static void init() {
   
   //prise de valeur des indexes aux memes valeurs que les limites
   hu_index = hu_limit;
-  hd_index = hu_limit;
+  hd_index = hd_limit;
   mu_index = mu_limit;
   md_index = md_limit;
   
