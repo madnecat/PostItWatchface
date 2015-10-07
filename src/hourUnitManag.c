@@ -21,10 +21,7 @@ int cur_hour_unit;
 int hu_index = 0;
 int hu_limit;
 
-//booléen d'arrêt d'affichage
-bool hu_stop = false;
 
-  
 // -------------------------------------------
 // ----------- Procédures --------------------
 // -------------------------------------------
@@ -37,13 +34,10 @@ void hour_unit_next_frame_handler(void *context) {
   layer_mark_dirty(hour_unit_layer);
   
   //si animation pas finie
-  if(! hu_stop)
+  if(hu_index != hu_limit)
     // Continue the sequence
     app_timer_register(DELTA, hour_unit_next_frame_handler, NULL);
 
-  //si animation finie, on repasse le booléen à faux
-  else
-    hu_stop = false;
     
 }
 
@@ -60,11 +54,9 @@ void hour_unit_update_proc(Layer *layer, GContext *ctx) {
   
   // Advance to the next frame, wrapping if neccessary
   int num_frames = gdraw_command_sequence_get_num_frames(hour_unit_sequence);
-  //si on a atteint l'heure actuelle, on arrête
-  if(hu_index == hu_limit)
-    hu_stop = true;
-  //sinon on incrémente
-  else
+
+  //si index différent de limite on incrémente
+  if(hu_index != hu_limit)
     hu_index++;
   
   //si fin de l'animation on reboucle

@@ -20,9 +20,6 @@ int cur_min_doz;
 int md_index;
 int md_limit;
 
-//booléen d'arrêt d'affichage
-bool md_stop = false;
-
   
 // -------------------------------------------
 // ----------- Procédures --------------------
@@ -36,13 +33,9 @@ void min_doz_next_frame_handler(void *context) {
   layer_mark_dirty(min_doz_layer);
   
   //si animation pas finie
-  if(! md_stop)
+  if(md_index != md_limit)
     // Continue the sequence
     app_timer_register(DELTA, min_doz_next_frame_handler, NULL);
-
-  //si animation finie, on repasse le booléen à faux
-  else
-    md_stop = false;
     
 }
 
@@ -59,12 +52,9 @@ void min_doz_update_proc(Layer *layer, GContext *ctx) {
   
   // Advance to the next frame, wrapping if neccessary
   int num_frames = gdraw_command_sequence_get_num_frames(min_doz_sequence);
-  
-  //si on a atteint l'heure actuelle, on arrête
-  if(md_index == md_limit)
-    md_stop = true;
-  //sinon on incrémente
-  else
+
+  //si index différent de limite on incrémente
+  if(md_index != md_limit)
     md_index++;
   
   //si fin de l'animation on reboucle

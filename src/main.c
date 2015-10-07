@@ -23,8 +23,63 @@ static Window *s_main_window;
 //hook appelé lors du changement de temps
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
-  // Start the animation
-//  app_timer_register(DELTA, next_frame_handler, NULL);
+  //récupération d l'heure actuelle
+  int hour_doz = getCurrentHourDoz();
+  int hour_unit = getCurrentHourUnit();
+  int min_doz = getCurrentMinDoz();
+  int min_unit = getCurrentMinUnit();
+  
+  //si la dizaine d'heure a changé
+  if(cur_hour_doz != hour_doz) {
+    
+    //on met à jour l'heure actuelle
+    cur_hour_doz = hour_doz;
+    
+    //on met à jour la limite, et on lance l'animation
+    hd_limit = cur_hour_doz * 26;
+    app_timer_register(DELTA, hour_doz_next_frame_handler, NULL);
+    
+  }
+  
+  //si l'unité d'heure a changé
+  if(cur_hour_unit != hour_unit) {
+    
+    //on met à jour l'heure actuelle
+    cur_hour_unit = hour_unit;
+    
+    //on met à jour la limite, et on lance l'animation
+    hu_limit = cur_hour_unit * 26;
+    app_timer_register(DELTA, hour_unit_next_frame_handler, NULL);
+    
+  }
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "changement : %d -> %d", cur_min_unit, min_unit);
+  
+  //si l'unité de minutes a changé
+  if(cur_min_unit != min_unit) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "minute changée détectée");
+    //on met à jour l'heure actuelle
+    cur_min_unit = min_unit;
+    
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "ancienne limite : %d", mu_limit);
+    //on met à jour la limite, et on lance l'animation
+    mu_limit = cur_min_unit * 26;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "limite modifiée: %d, index : %d", mu_limit, mu_index);
+    app_timer_register(DELTA, min_unit_next_frame_handler, NULL);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "fin de dessin");
+  }
+  
+  //si la dizaine de minutes a changé
+  if(cur_min_doz != min_doz) {
+    
+    //on met à jour l'heure actuelle
+    cur_min_doz = min_doz;
+    
+    //on met à jour la limite, et on lance l'animation
+    md_limit = cur_min_doz * 26;
+    app_timer_register(DELTA, min_doz_next_frame_handler, NULL);
+    
+  }
   
 }
 
@@ -109,10 +164,10 @@ static void init() {
   cur_min_unit = getCurrentMinUnit();
   
   //initialisation des limites à l'heure actuelle
-  mu_limit = getCurrentMinUnit() * 26;
-  md_limit = getCurrentMinDoz() * 26;
-  hu_limit = getCurrentHourUnit() * 26;
-  hd_limit = getCurrentHourDoz() * 26;
+  mu_limit = cur_min_unit * 26;
+  md_limit = cur_min_doz * 26;
+  hu_limit = cur_hour_unit * 26;
+  hd_limit = cur_hour_doz * 26;
   
   //prise de valeur des indexes aux memes valeurs que les limites
   hu_index = hu_limit;

@@ -21,9 +21,6 @@ int cur_min_unit;
 //index de parcours de la séquence
 int mu_index = 0;
 int mu_limit;
-
-//booléen d'arrêt d'affichage
-bool mu_stop = false;
   
 
 // -------------------------------------------
@@ -38,13 +35,9 @@ void min_unit_next_frame_handler(void *context) {
   layer_mark_dirty(min_unit_layer);
 
   //si animation pas finie
-  if(! mu_stop)
+  if(mu_index != mu_limit)
     // Continue the sequence
     app_timer_register(DELTA, min_unit_next_frame_handler, NULL);
-
-  //si animation finie, on repasse le booléen à faux
-  else
-    mu_stop = false;
     
 }
 
@@ -63,16 +56,12 @@ void min_unit_update_proc(Layer *layer, GContext *ctx) {
   // Advance to the next frame, wrapping if neccessary
   int num_frames = gdraw_command_sequence_get_num_frames(min_unit_sequence);
   
-  //si on a atteint l'heure actuelle, on arrête
-  if(mu_index == mu_limit)
-    mu_stop = true;
-  //sinon on incrémente
-  else
+  //si index différent de limite on incrémente
+  if(mu_index != mu_limit)
     mu_index++;
   
   //si fin de l'animation on reboucle
-  if (mu_index >= num_frames) {
+  if (mu_index >= num_frames)
     mu_index = 0;
-  }
   
 }
