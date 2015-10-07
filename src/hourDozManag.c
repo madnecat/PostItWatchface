@@ -9,9 +9,6 @@ Layer *hour_doz_layer;
 
 //séquence d'animation des dizaines d'heures
 GDrawCommandSequence *hour_doz_sequence;
-
-//booléen marquant la première exécution graphique
-bool hd_init = true;
   
 //mémoires de la valeur actuelle
 int cur_hour_doz;

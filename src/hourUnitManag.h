@@ -21,8 +21,8 @@
 //mémoires de la valeur actuelle
 extern int cur_hour_unit; 
   
-//booléen marquant la première exécution graphique
-extern bool hu_init;
+//booléen marquant la valeur de minuit
+extern bool hu_loop;
   
 //index de parcours de la séquence
 extern int hu_index;
@@ -33,6 +33,7 @@ extern Layer *hour_unit_layer;
 
 //séquence d'animation des unités des heures
 extern GDrawCommandSequence *hour_unit_sequence;
+extern GDrawCommandSequence *hour_unit_loop_sequence;
 
   
 // -------------------------------------------

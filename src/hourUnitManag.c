@@ -10,9 +10,10 @@ Layer *hour_unit_layer;
 
 //séquence d'animation des unités des heures
 GDrawCommandSequence *hour_unit_sequence;
+GDrawCommandSequence *hour_unit_loop_sequence;
 
-//booléen marquant la première exécution graphique
-bool hu_init = true;
+//booléen marquant la valeur de minuit
+bool hu_loop = false;
 
 //mémoires de la valeur actuelle
 int cur_hour_unit;
@@ -44,8 +45,25 @@ void hour_unit_next_frame_handler(void *context) {
 //fonction de dessin de l'image actuelle au sein de l'animation pour les unités des heures
 void hour_unit_update_proc(Layer *layer, GContext *ctx) {
   
-  // Get the next frame
-  GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(hour_unit_sequence, hu_index);
+  //frame suivante
+  GDrawCommandFrame *frame;
+  
+  //si on doit lancer l'animation 3 -> 4 mais qu'il est 23h passé : 3 -> 0
+  if(hu_loop) {
+    
+    //raz index
+    hu_index = 0;
+    
+    //maj limite
+    hu_limit = 26;
+    
+    // Get the next frame
+    frame = gdraw_command_sequence_get_frame_by_index(hour_unit_sequence, hu_index);
+    
+  } else
+    
+    // Get the next frame
+    frame = gdraw_command_sequence_get_frame_by_index(hour_unit_sequence, hu_index);
   
   // If another frame was found, draw it    
   if (frame) {
@@ -63,5 +81,9 @@ void hour_unit_update_proc(Layer *layer, GContext *ctx) {
   if (hu_index >= num_frames) {
     hu_index = 0;
   }
+  
+  //si fin de loop spécial, on remet index à 0
+  if(hu_index == hu_limit && hu_loop)
+    hu_index = 0;
   
 }

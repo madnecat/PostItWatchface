@@ -20,9 +20,6 @@
 
 //mémoires de la valeur actuelle
 extern int cur_min_doz; 
-
-//booléen marquant la première exécution graphique
-extern bool md_init;
   
 //index de parcours de la séquence
 extern int md_index;  

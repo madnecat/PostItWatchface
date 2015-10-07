@@ -12,9 +12,6 @@ Layer *min_unit_layer;
 //séquence d'animation des unités des minutes
 GDrawCommandSequence *min_unit_sequence;  
   
-//booléen marquant la première exécution graphique
-bool mu_init = true;
-  
 //mémoires de la valeur actuelle
 int cur_min_unit;
 

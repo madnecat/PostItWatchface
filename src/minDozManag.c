@@ -10,9 +10,6 @@ Layer *min_doz_layer;
 //séquence d'animation des dizaines des minutes
 GDrawCommandSequence *min_doz_sequence;
 
-//booléen marquant la première exécution graphique
-bool md_init = true;
-
 //mémoires de la valeur actuelle
 int cur_min_doz;
 

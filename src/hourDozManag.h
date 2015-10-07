@@ -21,9 +21,6 @@
 //mémoires de la valeur actuelle
 extern int cur_hour_doz;
   
-//booléen marquant la première exécution graphique
-extern bool hd_init;
-  
 //index de parcours de la séquence
 extern int hd_index; 
 extern int hd_limit;

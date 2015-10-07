@@ -18,9 +18,6 @@
 //mémoires de la valeur actuelle
 extern int cur_min_unit;
   
-//booléen marquant la première exécution graphique
-extern bool mu_init;
-  
 //index de parcours de la séquence
 extern int mu_index;
 extern int mu_limit;
