@@ -23,7 +23,8 @@ extern int cur_hour_unit;
   
 //booléen marquant la valeur de minuit
 extern bool hu_loop;
-  
+extern bool hu_trigger_spe;
+
 //index de parcours de la séquence
 extern int hu_index;
 extern int hu_limit;

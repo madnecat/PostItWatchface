@@ -15,6 +15,8 @@
 //fenêtre principale
 static Window *s_main_window;
 
+//booléen permettant de créer un comportement différent à l'initialisation
+bool app_ini = true;
 
 // -------------------------------------------
 // ----------- Procédures --------------------
@@ -24,61 +26,76 @@ static Window *s_main_window;
 //hook appelé lors du changement de temps
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
-  //récupération d l'heure actuelle
-  int hour_doz = getCurrentHourDoz();
-  int hour_unit = getCurrentHourUnit();
-  int min_doz = getCurrentMinDoz();
-  int min_unit = getCurrentMinUnit();
-  
-  //si la dizaine d'heure a changé
-  if(cur_hour_doz != hour_doz) {
+  if(! app_ini) {
     
-    //on met à jour l'heure actuelle
-    cur_hour_doz = hour_doz;
+    //récupération d l'heure actuelle
+    int hour_doz = getCurrentHourDoz();
+    int hour_unit = getCurrentHourUnit();
+    int min_doz = getCurrentMinDoz();
+    int min_unit = getCurrentMinUnit();
     
-    //on met à jour la limite, et on lance l'animation
-    hd_limit = cur_hour_doz * FRAMES;
-    app_timer_register(DELTA, hour_doz_next_frame_handler, NULL);
+    //si la dizaine d'heure a changé
+    if(cur_hour_doz != hour_doz) {
+      
+      //on met à jour l'heure actuelle
+      cur_hour_doz = hour_doz;
+      
+      //on met à jour la limite, et on lance l'animation
+      hd_limit = cur_hour_doz * FRAMES;
+      app_timer_register(DELTA, hour_doz_next_frame_handler, NULL);
+      
+    }
     
-  }
-  
-  //si l'unité d'heure a changé
-  if(cur_hour_unit != hour_unit) {
+    //si l'unité d'heure a changé
+    if(cur_hour_unit != hour_unit) {
+      
+      //on met à jour l'heure actuelle
+      cur_hour_unit = hour_unit;
+      
+      //on met à jour la limite, et on lance l'animation
+      hu_limit = cur_hour_unit * FRAMES;
+      app_timer_register(DELTA, hour_unit_next_frame_handler, NULL);
+      
+    }
     
-    //on met à jour l'heure actuelle
-    cur_hour_unit = hour_unit;
+    //si l'unité de minutes a changé
+    if(cur_min_unit != min_unit) {
+      
+      //on met à jour l'heure actuelle
+      cur_min_unit = min_unit;
+      
+      //on met à jour la limite, et on lance l'animation
+      mu_limit = cur_min_unit * FRAMES;
+      app_timer_register(DELTA, min_unit_next_frame_handler, NULL);
+      
+    }
     
-    //on met à jour la limite, et on lance l'animation
-    hu_limit = cur_hour_unit * FRAMES;
-    app_timer_register(DELTA, hour_unit_next_frame_handler, NULL);
+    //si la dizaine de minutes a changé
+    if(cur_min_doz != min_doz) {
+      
+      //on met à jour l'heure actuelle
+      cur_min_doz = min_doz;
+      
+      //on met à jour la limite, et on lance l'animation
+      md_limit = cur_min_doz * FRAMES;
+      app_timer_register(DELTA, min_doz_next_frame_handler, NULL);
+      
+    }
     
-  }
-  
-  //si l'unité de minutes a changé
-  if(cur_min_unit != min_unit) {
+    hu_loop = ( (cur_hour_doz == 0) && (cur_hour_unit == 0)  && (cur_min_unit == 0) && (cur_min_doz == 0));
+    hu_trigger_spe = hu_loop;
+    //si minuit, on met à jour les infos d'index pour loop
+    if(hu_loop) {
+      
+      hu_index = 0;
+      
+      hu_limit = FRAMES;
+      
+    }
     
-    //on met à jour l'heure actuelle
-    cur_min_unit = min_unit;
+  } else
     
-    //on met à jour la limite, et on lance l'animation
-    mu_limit = cur_min_unit * FRAMES;
-    app_timer_register(DELTA, min_unit_next_frame_handler, NULL);
-    
-  }
-  
-  //si la dizaine de minutes a changé
-  if(cur_min_doz != min_doz) {
-    
-    //on met à jour l'heure actuelle
-    cur_min_doz = min_doz;
-    
-    //on met à jour la limite, et on lance l'animation
-    md_limit = cur_min_doz * FRAMES;
-    app_timer_register(DELTA, min_doz_next_frame_handler, NULL);
-    
-  }
-  
-  hu_loop = ( (cur_hour_doz == 2) && (cur_hour_unit == 3) );
+  app_ini = false;
   
 }
 
@@ -128,7 +145,7 @@ static void main_window_unload(Window *window) {
   gdraw_command_sequence_destroy(min_unit_sequence);
   gdraw_command_sequence_destroy(min_doz_sequence);
   gdraw_command_sequence_destroy(hour_doz_sequence);
-  
+  gdraw_command_sequence_destroy(hour_unit_loop_sequence);
   
 }
 
@@ -183,7 +200,7 @@ static void init() {
   app_timer_register(DELTA, min_doz_next_frame_handler, NULL);
   app_timer_register(DELTA, hour_unit_next_frame_handler, NULL);
   app_timer_register(DELTA, hour_doz_next_frame_handler, NULL);
-
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "useless");
 }
 
 //destructeur du projet
