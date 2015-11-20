@@ -155,6 +155,9 @@ static void init() {
   //création de la fenêtre principale
   s_main_window = window_create();
   
+  //couleur de fond grise
+//  window_set_background_color(s_main_window, GColorLightGray);
+  
   //définition des constructeurs et destructeurs de la fenêtre principale
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = main_window_load,
